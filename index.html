@@ -67,7 +67,6 @@
             align-items: center;
             justify-content: center;
         }
-        .sound-control:hover { background: rgba(255, 255, 255, 0.2); }
         .sound-control svg { width: 20px; height: 20px; fill: var(--accent-main); }
 
         /* --- HERO --- */
@@ -79,13 +78,13 @@
             top: 0; z-index: -1;
             background: radial-gradient(circle, #3a0a16 0%, var(--bg-deep) 100%);
         }
-        .cover h1 { font-family: 'Playfair Display', serif; font-size: 5.5rem; letter-spacing: -2px; margin: 0; }
+        .cover h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 10vw, 5.5rem); letter-spacing: -2px; margin: 0; padding: 0 20px; }
         .cover h1 i { font-weight: 700; color: var(--accent-main); }
-        .cover p { font-size: 0.9rem; letter-spacing: 5px; text-transform: uppercase; color: var(--text-muted); margin-top: 25px; }
+        .cover p { font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; color: var(--text-muted); margin-top: 25px; }
 
         .journey-wrapper { background-color: var(--bg-deep); position: relative; z-index: 1; padding-bottom: 25vh; }
 
-        /* --- STAGES --- */
+        /* --- STAGES (Desktop) --- */
         .stage { height: 100vh; width: 100%; display: flex; align-items: center; position: relative; margin-bottom: 20vh; }
         .stage.reverse { justify-content: flex-end; }
         .stage-image {
@@ -119,7 +118,7 @@
             flex-direction: column; text-align: center; padding: 100px 25px;
             border-top: 1px solid rgba(255,255,255,0.03); position: relative; z-index: 2;
         }
-        .confession-section h2 { font-family: 'Playfair Display', serif; font-size: 3.8rem; color: var(--accent-main); }
+        .confession-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 8vw, 3.8rem); color: var(--accent-main); }
         .btn-group { margin-top: 60px; display: flex; gap: 25px; height: 60px; }
         button { padding: 20px 55px; border-radius: 4px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
         
@@ -127,8 +126,6 @@
         #noBtn { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.15); }
 
         #successMessage { display: none; max-width: 800px; animation: fadeIn 2s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .success-photo-wrapper {
             width: 100%; max-width: 500px; margin: 40px auto; border-radius: 12px;
             overflow: hidden; border: 1px solid var(--accent-main);
@@ -139,45 +136,45 @@
 
         .heart { color: var(--accent-main); animation: heartBeat 1.5s infinite; font-size: 3rem; margin-top: 20px; }
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- MOBILE RESPONSIVENESS --- */
+        /* --- MOBILE MEDIA QUERY --- */
         @media (max-width: 768px) {
-            .cover h1 { font-size: 3rem; }
-            .cover p { font-size: 0.7rem; letter-spacing: 3px; }
-
-            .stage { 
-                flex-direction: column; 
-                height: auto; 
-                margin-bottom: 10vh; 
-                padding: 0 20px;
+            .stage {
+                height: auto;
+                flex-direction: column !important;
+                margin-bottom: 10vh;
+                padding: 0 15px;
             }
-            .stage-image { 
-                position: relative; 
-                width: 100%; 
-                height: 300px; 
-                top: 0; 
-                border-radius: 12px !important; 
+            .stage-image {
+                position: relative;
+                width: 100%;
+                height: 350px;
+                top: 0;
+                left: 0 !important;
+                right: 0 !important;
+                border-radius: 12px !important;
             }
-            .stage-content { 
-                width: 90%; 
-                left: auto !important; 
-                right: auto !important; 
-                padding: 30px; 
-                margin-top: -40px; /* Overlap image slightly */
+            .stage-content {
+                width: 100%;
+                box-sizing: border-box;
+                left: 0 !important;
+                right: 0 !important;
+                margin-top: -60px; /* Overlaps image for aesthetic */
+                padding: 30px 20px;
+                border-radius: 12px;
             }
-            .stage h2 { font-size: 1.8rem; margin-bottom: 15px; }
+            .stage h2 { font-size: 1.8rem; }
             .stage p { font-size: 1rem; line-height: 1.6; }
-
-            .confession-section h2 { font-size: 2.2rem; }
-            .btn-group { 
-                flex-direction: column; 
-                height: auto; 
-                width: 100%; 
-                align-items: center;
-            }
-            button { width: 100%; max-width: 300px; padding: 15px; }
             
-            #noBtn { position: relative !important; top: 0 !important; left: 0 !important; margin-top: 10px; }
+            .btn-group {
+                flex-direction: column;
+                height: auto;
+                width: 100%;
+                gap: 15px;
+            }
+            button { width: 100%; padding: 15px; }
+            #noBtn { position: relative !important; top: 0 !important; left: 0 !important; }
         }
     </style>
 </head>
@@ -191,8 +188,8 @@
         <source src="Zack Tabudlo - Give Me Your Forever (Lyric Video).mp3" type="audio/mpeg">
     </audio>
 
-    <div class="sound-control" id="muteBtn" title="Toggle Sound">
-        <svg id="speakerIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <div class="sound-control" id="muteBtn">
+        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
     </div>
 
     <header class="cover">
@@ -207,7 +204,7 @@
             <div class="stage-content">
                 <span class="stage-meta">PART 1 // The Origin Point</span>
                 <h2>First Impressions</h2>
-                <p>It started as an ordinary interaction, just another casual exchange in the flow of the day. Yet, I clearly remember the exact moment something felt different. There was a distinct spark that made me stop and pay attention, like the world had briefly shifted its focus.</p>
+                <p>It started as an ordinary interaction, just another casual exchange in the flow of the day. Yet, I clearly remember the exact moment something felt different.</p>
             </div>
         </div>
 
@@ -268,7 +265,7 @@
         </div>
         
         <div id="successMessage">
-            <h2 style="font-size: 2.5rem;">It's a wonderful decision.</h2>
+            <h2>It's a wonderful decision.</h2>
             <div class="success-photo-wrapper" id="successPhoto">
                 <img src="SUCCESS_PHOTO.jpg" alt="Our Next Chapter">
             </div>
@@ -287,21 +284,18 @@
         const startBtn = document.getElementById('startBtn');
         const startOverlay = document.getElementById('startOverlay');
 
-        // Start button logic
         startBtn.addEventListener('click', () => {
             startOverlay.style.opacity = '0';
             setTimeout(() => startOverlay.style.display = 'none', 1000);
-            bgMusic.play();
+            bgMusic.play().catch(e => console.log("Audio play blocked"));
             bgMusic.volume = 1.0;
         });
 
-        // Mute/Unmute Toggle
         muteBtn.addEventListener('click', () => {
             bgMusic.muted = !bgMusic.muted;
             muteBtn.style.opacity = bgMusic.muted ? "0.5" : "1";
         });
 
-        // Intersection Observer for animations
         const stageObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -310,19 +304,16 @@
                     if (img) img.classList.add('zoom');
                 }
             });
-        }, { threshold: 0.2 }); // Lower threshold for mobile visibility
+        }, { threshold: 0.1 });
 
         document.querySelectorAll('.stage').forEach(s => stageObserver.observe(s));
 
-        // YES Button Click
         yesBtn.addEventListener('click', () => {
             offer.style.display = 'none';
             successMessage.style.display = 'block';
             setTimeout(() => successPhoto.classList.add('reveal'), 100);
-            bgMusic.volume = 0.8;
         });
 
-        // NO Button Runaway (Disabled for small screens to prevent layout breaking)
         const noBtn = document.getElementById('noBtn');
         noBtn.addEventListener('mouseover', () => {
             if (window.innerWidth > 768) {
