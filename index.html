@@ -16,6 +16,23 @@
             --glass-base: rgba(44, 4, 13, 0.85);
         }
 
+        /* --- NEW: FLOATING PETALS LAYER --- */
+        #petal-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5; /* Behind content, above background */
+            overflow: hidden;
+        }
+        .petal {
+            position: absolute;
+            background-color: var(--accent-main);
+            border-radius: 150% 0 150% 0;
+            opacity: 0.3;
+            filter: blur(1px);
+            animation: fall linear forwards;
+        }
+
         /* --- START OVERLAY --- */
         #startOverlay {
             position: fixed;
@@ -76,15 +93,27 @@
             justify-content: center; align-items: center;
             text-align: center; position: sticky;
             top: 0; z-index: -1;
-            background: radial-gradient(circle, #3a0a16 0%, var(--bg-deep) 100%);
+            /* Animated Gradient Background */
+            background: radial-gradient(circle at center, #4a0e1c 0%, var(--bg-deep) 100%);
+            background-size: 200% 200%;
+            animation: drift 15s infinite alternate ease-in-out;
         }
-        .cover h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 10vw, 5.5rem); letter-spacing: -2px; margin: 0; padding: 0 10px; }
+        .cover h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: clamp(2.8rem, 10vw, 5.5rem); 
+            letter-spacing: -2px; margin: 0; padding: 0 10px;
+            animation: fadeInUp 2s ease-out forwards;
+        }
         .cover h1 i { font-weight: 700; color: var(--accent-main); }
-        .cover p { font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; color: var(--text-muted); margin-top: 25px; }
+        .cover p { 
+            font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; 
+            color: var(--text-muted); margin-top: 25px; 
+            animation: fadeInUp 2.5s ease-out forwards;
+        }
 
         .journey-wrapper { background-color: var(--bg-deep); position: relative; z-index: 1; padding-bottom: 25vh; }
 
-        /* --- STAGES (Desktop) --- */
+        /* --- STAGES --- */
         .stage { height: 100vh; width: 100%; display: flex; align-items: center; position: relative; margin-bottom: 20vh; }
         .stage.reverse { justify-content: flex-end; }
         .stage-image {
@@ -93,14 +122,19 @@
         }
         .stage.normal .stage-image { left: 0; border-radius: 0 12px 12px 0; }
         .stage.reverse .stage-image { right: 0; border-radius: 12px 0 0 12px; }
-        .stage-image img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: transform 3s ease-out, opacity 3s; }
-        .stage-image img.zoom { transform: scale(1.08); opacity: 0.95; }
+        
+        /* Smooth zoom transition */
+        .stage-image img { 
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.8; 
+            transition: transform 6s cubic-bezier(0.16, 1, 0.3, 1), opacity 3s; 
+        }
+        .stage-image img.zoom { transform: scale(1.15); opacity: 0.95; }
 
         .stage-content {
             width: 38%; background: var(--glass-base); backdrop-filter: blur(25px);
             padding: 65px; border-radius: 16px; z-index: 2; position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4); opacity: 0; transform: translateY(40px);
-            transition: 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); opacity: 0; transform: translateY(60px);
+            transition: 1.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .stage.normal .stage-content { left: 56%; }
         .stage.reverse .stage-content { right: 56%; }
@@ -119,69 +153,59 @@
             border-top: 1px solid rgba(255,255,255,0.03); position: relative; z-index: 2;
         }
         .confession-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 8vw, 3.8rem); color: var(--accent-main); }
-        .btn-group { margin-top: 60px; display: flex; gap: 25px; height: 60px; }
-        button { padding: 20px 55px; border-radius: 4px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
         
-        #yesBtn { background-color: var(--accent-main); color: var(--bg-deep); font-weight: 600; }
+        .btn-group { margin-top: 60px; display: flex; gap: 25px; height: 60px; }
+        button { padding: 20px 55px; border-radius: 4px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.4s; }
+        
+        #yesBtn { 
+            background-color: var(--accent-main); color: var(--bg-deep); font-weight: 600; 
+            animation: pulseGlow 2s infinite;
+        }
+        #yesBtn:hover { transform: scale(1.05); filter: brightness(1.1); }
         #noBtn { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.15); }
 
         #successMessage { display: none; max-width: 800px; animation: fadeIn 2s ease; }
         .success-photo-wrapper {
             width: 100%; max-width: 500px; margin: 40px auto; border-radius: 12px;
             overflow: hidden; border: 1px solid var(--accent-main);
-            opacity: 0; transform: scale(0.9); transition: 1.5s ease;
+            opacity: 0; transform: scale(0.9); transition: 2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .success-photo-wrapper.reveal { opacity: 1; transform: scale(1); }
         .success-photo-wrapper img { width: 100%; display: block; }
-        .heart { color: var(--accent-main); animation: heartBeat 1.5s infinite; font-size: 3rem; margin-top: 20px; }
+        .heart { color: var(--accent-main); animation: heartBeat 1.5s infinite, fadeInUp 1s; font-size: 3rem; margin-top: 20px; }
         
+        /* --- NEW KEYFRAMES --- */
+        @keyframes drift { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(243, 198, 209, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(243, 198, 209, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(243, 198, 209, 0); }
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
 
         /* --- MOBILE MEDIA QUERY --- */
         @media (max-width: 850px) {
             .cover { position: relative; z-index: 1; }
             .journey-wrapper { padding-top: 20px; }
-            .stage {
-                height: auto !important;
-                flex-direction: column !important;
-                margin-bottom: 60px !important;
-                padding: 0 15px;
-            }
-            .stage-image {
-                position: relative !important;
-                width: 100% !important;
-                height: 350px !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                border-radius: 12px !important;
-            }
-            .stage-content {
-                width: 95% !important;
-                left: 0 !important;
-                right: 0 !important;
-                margin: -40px auto 0 auto !important;
-                padding: 30px 20px !important;
-                border-radius: 12px;
-                opacity: 1 !important;
-                transform: translateY(0) !important;
-            }
+            .stage { height: auto !important; flex-direction: column !important; margin-bottom: 60px !important; padding: 0 15px; }
+            .stage-image { position: relative !important; width: 100% !important; height: 350px !important; top: 0 !important; left: 0 !important; right: 0 !important; border-radius: 12px !important; }
+            .stage-content { width: 95% !important; left: 0 !important; right: 0 !important; margin: -40px auto 0 auto !important; padding: 30px 20px !important; border-radius: 12px; opacity: 1 !important; transform: translateY(0) !important; }
             .stage h2 { font-size: 1.8rem; margin-bottom: 15px; }
             .stage p { font-size: 1rem; line-height: 1.6; }
-            
-            .btn-group {
-                flex-direction: column;
-                height: auto;
-                width: 100%;
-                gap: 15px;
-            }
+            .btn-group { flex-direction: column; height: auto; width: 100%; gap: 15px; }
             button { width: 100%; padding: 18px; }
             #noBtn { position: relative !important; top: 0 !important; left: 0 !important; margin-top: 5px; }
         }
     </style>
 </head>
 <body>
+
+    <div id="petal-container"></div>
 
     <div id="startOverlay">
         <button id="startBtn">BEGIN THE STORY</button>
@@ -286,13 +310,28 @@
         const successPhoto = document.getElementById('successPhoto');
         const startBtn = document.getElementById('startBtn');
         const startOverlay = document.getElementById('startOverlay');
+        const petalContainer = document.getElementById('petal-container');
 
-        // Logic for start button (unlocks audio)
+        // Logic for petals
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.width = Math.random() * 15 + 10 + 'px';
+            petal.style.height = petal.style.width;
+            petal.style.animationDuration = Math.random() * 3 + 5 + 's';
+            petal.style.opacity = Math.random() * 0.5;
+            petalContainer.appendChild(petal);
+            setTimeout(() => petal.remove(), 8000);
+        }
+
+        // Logic for start button (unlocks audio & starts petals)
         startBtn.addEventListener('click', () => {
             startOverlay.style.opacity = '0';
             setTimeout(() => startOverlay.style.display = 'none', 1000);
             bgMusic.play().catch(err => console.log("Audio play blocked by browser"));
-            bgMusic.volume = 1.0;
+            bgMusic.volume = 0.6;
+            setInterval(createPetal, 400); // Start the petal effect
         });
 
         muteBtn.addEventListener('click', () => {
@@ -317,6 +356,8 @@
             successMessage.style.display = 'block';
             setTimeout(() => successPhoto.classList.add('reveal'), 100);
             bgMusic.volume = 0.8;
+            // Increase petals on success
+            setInterval(createPetal, 100);
         });
 
         const noBtn = document.getElementById('noBtn');
