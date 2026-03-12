@@ -16,24 +16,41 @@
             --glass-base: rgba(44, 4, 13, 0.85);
         }
 
-        /* --- NEW: FLOATING PETALS LAYER --- */
+        /* NEW: Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: var(--accent-main);
+            z-index: 10001;
+            box-shadow: 0 0 10px var(--accent-main);
+            transition: width 0.2s ease-out;
+        }
+
         #petal-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 5; /* Behind content, above background */
-            overflow: hidden;
+            pointer-events: none; z-index: 5; overflow: hidden;
         }
-        .petal {
+        .petal, .heart-confetti {
             position: absolute;
             background-color: var(--accent-main);
+            pointer-events: none;
+        }
+        .petal {
             border-radius: 150% 0 150% 0;
-            opacity: 0.3;
-            filter: blur(1px);
+            opacity: 0.3; filter: blur(1px);
             animation: fall linear forwards;
         }
+        /* NEW: Heart Confetti Style */
+        .heart-confetti {
+            font-size: 20px;
+            user-select: none;
+            animation: heartFall 3s linear forwards;
+        }
 
-        /* --- START OVERLAY --- */
         #startOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -42,277 +59,322 @@
             z-index: 9999; transition: opacity 1s ease;
         }
         #startBtn {
-            padding: 20px 40px;
-            background: transparent;
-            color: var(--accent-main);
-            border: 2px solid var(--accent-main);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            cursor: pointer;
-            letter-spacing: 2px;
-            transition: 0.3s;
+            padding: 20px 40px; background: transparent;
+            color: var(--accent-main); border: 2px solid var(--accent-main);
+            font-family: 'Playfair Display', serif; font-size: 1.5rem;
+            cursor: pointer; letter-spacing: 2px; transition: 0.3s;
         }
-        #startBtn:hover {
-            background: var(--accent-main);
-            color: var(--bg-deep);
-        }
+        #startBtn:hover { background: var(--accent-main); color: var(--bg-deep); }
 
         body, html {
-            margin: 0; padding: 0;
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Work Sans', sans-serif;
-            font-weight: 300;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
+            margin: 0; padding: 0; background-color: var(--bg-deep);
+            color: var(--text-main); font-family: 'Work Sans', sans-serif;
+            font-weight: 300; overflow-x: hidden; scroll-behavior: smooth;
         }
 
-        /* --- SOUND CONTROL UI --- */
         .sound-control {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+            padding: 10px; border-radius: 50%; cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2); display: flex;
             transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        .sound-control svg { width: 20px; height: 20px; fill: var(--accent-main); }
+        .sound-control:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.1); }
+        .sound-control svg { width: 24px; height: 24px; fill: var(--accent-main); }
 
-        /* --- HERO --- */
         .cover {
-            height: 100vh; width: 100%;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            text-align: center; position: sticky;
-            top: 0; z-index: -1;
-            /* Animated Gradient Background */
+            height: 100vh; width: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            position: sticky; top: 0; z-index: -1;
             background: radial-gradient(circle at center, #4a0e1c 0%, var(--bg-deep) 100%);
-            background-size: 200% 200%;
-            animation: drift 15s infinite alternate ease-in-out;
+            background-size: 200% 200%; animation: drift 15s infinite alternate ease-in-out;
         }
         .cover h1 { 
-            font-family: 'Playfair Display', serif; 
-            font-size: clamp(2.8rem, 10vw, 5.5rem); 
-            letter-spacing: -2px; margin: 0; padding: 0 10px;
-            animation: fadeInUp 2s ease-out forwards;
+            font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 8vw, 5.5rem); 
+            letter-spacing: -1px; margin: 0; padding: 0 10px; display: inline-block;
+            border-right: 3px solid var(--accent-main); white-space: nowrap;
+            overflow: hidden; width: fit-content;
         }
-        .cover h1 i { font-weight: 700; color: var(--accent-main); }
-        .cover p { 
-            font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; 
-            color: var(--text-muted); margin-top: 25px; 
-            animation: fadeInUp 2.5s ease-out forwards;
-        }
+        /* --- NEW: Interactive Text Glow Effects --- */
+
+/* Targets the main typewriter title and section headers */
+h1, h2, .stage-meta {
+    transition: text-shadow 0.4s ease, color 0.4s ease;
+    cursor: default;
+}
+
+h1:hover, h2:hover {
+    color: #fff; /* Brightens slightly */
+    text-shadow: 0 0 10px var(--accent-main), 
+                 0 0 20px var(--accent-alt), 
+                 0 0 30px var(--accent-main);
+}
+
+/* Specific glow for the Stage Meta (the "PART 1 //" text) */
+.stage-meta:hover {
+    color: var(--accent-main);
+    text-shadow: 0 0 8px var(--accent-premium);
+}
+
+/* Smooth transition for the confession question */
+#offer p {
+    transition: all 0.5s ease;
+}
+
+#offer p:hover {
+    color: var(--accent-main);
+    text-shadow: 0 0 5px rgba(243, 198, 209, 0.5);
+}
+
+/* Adding a subtle glow to the buttons when hovered */
+#yesBtn:hover, #noBtn:hover {
+    box-shadow: 0 0 20px var(--accent-main);
+    transform: translateY(-2px);
+}
+        .cursor-blink { animation: blink 0.8s step-end infinite; }
+        @keyframes blink { from, to { border-color: transparent } 50% { border-color: var(--accent-main); } }
 
         .journey-wrapper { background-color: var(--bg-deep); position: relative; z-index: 1; padding-bottom: 25vh; }
 
-        /* --- STAGES --- */
-        .stage { height: 100vh; width: 100%; display: flex; align-items: center; position: relative; margin-bottom: 20vh; }
+        .stage { height: 120vh; width: 100%; display: flex; align-items: center; position: relative; margin-bottom: 10vh; }
         .stage.reverse { justify-content: flex-end; }
         .stage-image {
-            width: 60%; height: 80%; overflow: hidden; position: absolute; top: 10%; z-index: 1;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.6); background-color: #1a0208; border: 1px solid rgba(255,255,255,0.03);
+            width: 60%; height: 70%; overflow: hidden; position: absolute; top: 15%; z-index: 1;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.6); background-color: #1a0208;
+            /* Added perspective for parallax */
+            perspective: 1000px;
         }
         .stage.normal .stage-image { left: 0; border-radius: 0 12px 12px 0; }
         .stage.reverse .stage-image { right: 0; border-radius: 12px 0 0 12px; }
-        
-        /* Smooth zoom transition */
         .stage-image img { 
-            width: 100%; height: 100%; object-fit: cover; opacity: 0.8; 
-            transition: transform 6s cubic-bezier(0.16, 1, 0.3, 1), opacity 3s; 
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.7; 
+            transition: transform 0.5s ease-out, opacity 3s, filter 2.5s ease; 
         }
-        .stage-image img.zoom { transform: scale(1.15); opacity: 0.95; }
+        .stage-image img.zoom { opacity: 0.9; }
 
         .stage-content {
-            width: 38%; background: var(--glass-base); backdrop-filter: blur(25px);
-            padding: 65px; border-radius: 16px; z-index: 2; position: relative;
+            width: 40%; background: var(--glass-base); backdrop-filter: blur(25px);
+            padding: 50px; border-radius: 16px; z-index: 2; position: relative;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4); opacity: 0; transform: translateY(60px);
-            transition: 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: 1.5s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .stage.normal .stage-content { left: 56%; }
-        .stage.reverse .stage-content { right: 56%; }
+        .stage.normal .stage-content { left: 52%; }
+        .stage.reverse .stage-content { right: 52%; }
         .stage-content.visible { opacity: 1; transform: translateY(0); }
 
         .stage-meta { color: var(--accent-premium); letter-spacing: 3px; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 20px; display: block; }
-        .stage h2 { font-family: 'Playfair Display', serif; font-size: 2.7rem; margin: 0 0 30px 0; }
-        .stage p { line-height: 1.9; font-size: 1.1rem; }
+        .stage h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin: 0 0 20px 0; }
 
-        /* --- CONFESSION --- */
+        .chat-container { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
+        .bubble {
+            max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.9rem;
+            opacity: 0; transform: scale(0.9); transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .visible .bubble { opacity: 1; transform: scale(1); }
+        .bubble.them { align-self: flex-start; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-bottom-left-radius: 4px; }
+        .bubble.me { align-self: flex-end; background: var(--accent-main); color: var(--bg-deep); border-bottom-right-radius: 4px; font-weight: 600; }
+        .bubble:nth-child(1) { transition-delay: 0.8s; }
+        .bubble:nth-child(2) { transition-delay: 1.8s; }
+        .bubble:nth-child(3) { transition-delay: 2.8s; }
+        .bubble:nth-child(4) { transition-delay: 3.8s; }
+
+        .polaroid-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 30px; }
+        .polaroid {
+            background: white; padding: 10px 10px 25px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            width: 130px; transition: 0.4s; cursor: pointer; position: relative; z-index: 1;
+        }
+        .polaroid:nth-child(odd) { transform: rotate(-4deg); }
+        .polaroid:nth-child(even) { transform: rotate(4deg); }
+        .polaroid img { width: 100%; height: 110px; object-fit: cover; }
+        .polaroid span { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.65rem; color: #333; text-align: center; margin-top: 8px; }
+        .polaroid.active { transform: scale(1.6) rotate(0deg) !important; z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+
+        .progress-wrapper { margin-top: 30px; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-premium); margin-bottom: 8px; }
+        .bar-bg { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; }
+        .bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-alt), var(--accent-main)); box-shadow: 0 0 10px var(--accent-main); transition: width 2.5s cubic-bezier(0.1, 0.5, 0.2, 1); }
+
         .confession-section {
-            min-height: 100vh; width: 100%;
-            background: linear-gradient(180deg, var(--bg-deep) 0%, #3e0b1a 100%);
-            display: flex; justify-content: center; align-items: center;
-            flex-direction: column; text-align: center; padding: 100px 25px;
-            border-top: 1px solid rgba(255,255,255,0.03); position: relative; z-index: 2;
+            min-height: 100vh; width: 100%; background: linear-gradient(180deg, var(--bg-deep) 0%, #3e0b1a 100%);
+            display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center;
+            padding: 20px; box-sizing: border-box;
         }
-        .confession-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 8vw, 3.8rem); color: var(--accent-main); }
+        .btn-group { margin-top: 60px; display: flex; gap: 25px; min-height: 60px; position: relative; }
+        button { padding: 15px 45px; border-radius: 4px; border: none; cursor: pointer; letter-spacing: 2px; transition: 0.4s; }
+        #yesBtn { background-color: var(--accent-main); color: var(--bg-deep); font-weight: 600; animation: pulseGlow 2s infinite; }
+        #noBtn { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.15); transition: 0.2s; }
         
-        .btn-group { margin-top: 60px; display: flex; gap: 25px; height: 60px; }
-        button { padding: 20px 55px; border-radius: 4px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.4s; }
-        
-        #yesBtn { 
-            background-color: var(--accent-main); color: var(--bg-deep); font-weight: 600; 
-            animation: pulseGlow 2s infinite;
-        }
-        #yesBtn:hover { transform: scale(1.05); filter: brightness(1.1); }
-        #noBtn { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.15); }
+        #successMessage { display: none; animation: fadeIn 2s ease; }
+        .success-photo-wrapper { width: clamp(280px, 80%, 400px); margin: 40px auto; border-radius: 12px; overflow: hidden; opacity: 0; transition: 2s; }
+        .success-photo-wrapper.reveal { opacity: 1; }
+        .heart { color: var(--accent-main); animation: heartBeat 1.5s infinite; font-size: 3rem; }
 
-        #successMessage { display: none; max-width: 800px; animation: fadeIn 2s ease; }
-        .success-photo-wrapper {
-            width: 100%; max-width: 500px; margin: 40px auto; border-radius: 12px;
-            overflow: hidden; border: 1px solid var(--accent-main);
-            opacity: 0; transform: scale(0.9); transition: 2s cubic-bezier(0.16, 1, 0.3, 1);
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        @keyframes heartFall { 
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
-        .success-photo-wrapper.reveal { opacity: 1; transform: scale(1); }
-        .success-photo-wrapper img { width: 100%; display: block; }
-        .heart { color: var(--accent-main); animation: heartBeat 1.5s infinite, fadeInUp 1s; font-size: 3rem; margin-top: 20px; }
-        
-        /* --- NEW KEYFRAMES --- */
         @keyframes drift { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(243, 198, 209, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(243, 198, 209, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(243, 198, 209, 0); }
-        }
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); }
-        }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(243, 198, 209, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(243, 198, 209, 0); } 100% { box-shadow: 0 0 0 0 rgba(243, 198, 209, 0); } }
 
-        /* --- MOBILE MEDIA QUERY --- */
         @media (max-width: 850px) {
-            .cover { position: relative; z-index: 1; }
-            .journey-wrapper { padding-top: 20px; }
-            .stage { height: auto !important; flex-direction: column !important; margin-bottom: 60px !important; padding: 0 15px; }
-            .stage-image { position: relative !important; width: 100% !important; height: 350px !important; top: 0 !important; left: 0 !important; right: 0 !important; border-radius: 12px !important; }
-            .stage-content { width: 95% !important; left: 0 !important; right: 0 !important; margin: -40px auto 0 auto !important; padding: 30px 20px !important; border-radius: 12px; opacity: 1 !important; transform: translateY(0) !important; }
-            .stage h2 { font-size: 1.8rem; margin-bottom: 15px; }
-            .stage p { font-size: 1rem; line-height: 1.6; }
-            .btn-group { flex-direction: column; height: auto; width: 100%; gap: 15px; }
-            button { width: 100%; padding: 18px; }
-            #noBtn { position: relative !important; top: 0 !important; left: 0 !important; margin-top: 5px; }
+            .stage { height: auto; flex-direction: column; margin-bottom: 80px; }
+            .stage-image { position: relative; width: 100%; height: 300px; border-radius: 12px; }
+            .stage-content { width: 90%; margin: -50px auto 0; padding: 30px 20px; opacity: 1; transform: none; left: auto !important; right: auto !important; }
+            .btn-group { flex-direction: column; height: auto; align-items: center; width: 100%; }
+            #noBtn { position: static !important; } /* Disable moving on mobile for better UX */
         }
     </style>
 </head>
 <body>
 
+    <div id="scroll-progress"></div>
     <div id="petal-container"></div>
+    <div id="startOverlay"><button id="startBtn">BEGIN THE STORY</button></div>
+    <audio id="bgMusic" loop><source src="Zack Tabudlo - Give Me Your Forever (Lyric Video).mp3" type="audio/mpeg"></audio>
 
-    <div id="startOverlay">
-        <button id="startBtn">BEGIN THE STORY</button>
-    </div>
-
-    <audio id="bgMusic" loop>
-        <source src="Zack Tabudlo - Give Me Your Forever (Lyric Video).mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="sound-control" id="muteBtn" title="Toggle Sound">
-        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <div class="sound-control" id="muteBtn">
+        <svg id="audioIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
     </div>
 
     <header class="cover">
-        <p>A Curated Retrospective</p>
-        <h1>A Story <i>Shared</i>.</h1>
-        <p>Scroll to Begin</p>
+        <p style="text-transform: uppercase; letter-spacing: 5px; font-size: 0.7rem; opacity: 0.7;">A Curated Retrospective</p>
+        <h1 id="typewriter" class="cursor-blink"></h1>
+        <p style="margin-top: 20px; font-style: italic; opacity: 0.6;">Scroll to Begin</p>
     </header>
 
     <div class="journey-wrapper">
         <div class="stage normal">
-            <div class="stage-image"><img src="frist-inter.png"></div>
+            <div class="stage-image"><img src="unnamed (1).jpg" class="parallax-img"></div>
             <div class="stage-content">
                 <span class="stage-meta">PART 1 // The Origin Point</span>
                 <h2>First Impressions</h2>
-                <p>It started as an ordinary interaction, just another casual exchange in the flow of the day. I first met you at BISU, and at that time, I honestly didn’t notice you much—you were simply one of the many faces around. But somehow, that ordinary moment quietly became the beginning of something that would later mean so much to me.</p>
+                <p>It started as an ordinary interaction, but I clearly remember when the tone shifted.</p>
+                <div class="chat-container">
+                    <div class="bubble them">"Hey! Do you happen to have the link for today's meeting?"</div>
+                    <div class="bubble me">"Just sent it! Though I'm about 90% sure I'm going to be late anyway."</div>
+                    <div class="bubble them">"Haha typical. I'll save you a virtual seat then."</div>
+                    <div class="bubble me">"Deal. Don't let them start the important stuff without me!"</div>
+                </div>
             </div>
         </div>
 
         <div class="stage reverse">
-            <div class="stage-image"><img src="unnamed (1).jpg"></div>
+            <div class="stage-image"><img src="unnamed (1).jpg" style="filter: blur(5px); opacity: 0.3;" class="parallax-img"></div>
+            <div class="stage-content">
+                <span class="stage-meta">INTERLUDE // Stolen Moments</span>
+                <h2>The Little Things</h2>
+                <p>Beyond the milestones, it's these snapshots I replay the most. (Tap to zoom)</p>
+                <div class="polaroid-container">
+                    <div class="polaroid" onclick="this.classList.toggle('active')"><img src="unnamed (1).jpg"><span>First laugh.</span></div>
+                    <div class="polaroid" onclick="this.classList.toggle('active')"><img src="unnamed (1).jpg"><span>Coffee run.</span></div>
+                    <div class="polaroid" onclick="this.classList.toggle('active')"><img src="unnamed (1).jpg"><span>Just us.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stage normal">
+            <div class="stage-image"><img src="unnamed (1).jpg" class="parallax-img"></div>
             <div class="stage-content">
                 <span class="stage-meta">PART 2 // Growing Momentum</span>
                 <h2>Nourishing the Connection</h2>
                 <p>Over shared projects and discussions, a strong foundation formed. I felt something deeper developing.</p>
-            </div>
-        </div>
-
-        <div class="stage normal">
-            <div class="stage-image"><img src="unnamed (1).jpg"></div>
-            <div class="stage-content">
-                <span class="stage-meta">PART 3 // Key Milestone</span>
-                <h2>When Perspectives Shifted</h2>
-                <p>That conversation when you shared your ambitions. It was the moment I truly saw the person I wanted to share a vision with.</p>
+                <div class="progress-wrapper">
+                    <div class="progress-label"><span>Compatibility: Calculating...</span><span id="percent-text">0%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" id="compatibility-bar"></div></div>
+                </div>
             </div>
         </div>
 
         <div class="stage reverse">
-            <div class="stage-image"><img src="unnamed (1).jpg"></div>
-            <div class="stage-content">
-                <span class="stage-meta">PART 4 // The Turning Point</span>
-                <h2>The Undeniable Realization</h2>
-                <p>Gradually, it became impossible to ignore. I realized that my future, quite simply, had to include you.</p>
+            <div class="stage-image">
+                <img src="unnamed (1).jpg" id="focus-img" style="filter: blur(15px);" class="parallax-img">
             </div>
-        </div>
-
-        <div class="stage normal">
-            <div class="stage-image"><img src="unnamed (1).jpg"></div>
             <div class="stage-content">
-                <span class="stage-meta">PART 5 // Standing at the Peak</span>
-                <h2>The Present Day</h2>
-                <p>I value what we have built. It's time to take the definitive next step.</p>
-            </div>
-        </div>
-
-        <div class="stage reverse">
-            <div class="stage-image"><img src="unnamed (1).jpg"></div>
-            <div class="stage-content">
-                <span class="stage-meta">PART 6 // Definitive Conclusion</span>
-                <h2>The Final Statement</h2>
-                <p>The realization is complete: I want to explore an exceptional romantic connection together.</p>
+                <span class="stage-meta">PART 3 // The Turning Point</span>
+                <h2>The Realization</h2>
+                <p>Gradually, it became impossible to ignore. I realized that my favorite part of any day was simply the part where I got to talk to you.</p>
+                <div style="margin-top: 20px; padding-left: 15px; border-left: 2px solid var(--accent-main); font-style: italic; color: var(--text-muted); font-size: 0.9rem;">
+                    "It wasn't one big moment, but a thousand tiny ones that made me realize my future had to include you."
+                </div>
             </div>
         </div>
     </div>
 
     <section class="confession-section">
         <div id="offer">
-            <h2>The Next Chapter.</h2>
-            <p>Will you accept this proposal to explore a romantic relationship together?</p>
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 3rem;">The Next Chapter.</h2>
+            <p style="max-width: 500px; margin: 0 auto;">Will you accept this proposal to explore a romantic relationship?</p>
             <div class="btn-group">
                 <button id="yesBtn">Accept Proposal</button>
                 <button id="noBtn">Stay as Allies</button>
             </div>
         </div>
-        
         <div id="successMessage">
-            <h2 style="font-size: 2.5rem;">It's a wonderful decision.</h2>
-            <div class="success-photo-wrapper" id="successPhoto">
-                <img src="unnamed (1).jpg" alt="Our Next Chapter">
-            </div>
-            <p>I'll finalize the details of our celebratory outing soon.</p>
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">It's a wonderful decision.</h2>
+            <div class="success-photo-wrapper" id="successPhoto"><img src="unnamed (1).jpg" style="width:100%"></div>
             <div class="heart">♥</div>
         </div>
     </section>
 
     <script>
-        const bgMusic = document.getElementById('bgMusic');
-        const muteBtn = document.getElementById('muteBtn');
-        const yesBtn = document.getElementById('yesBtn');
-        const offer = document.getElementById('offer');
-        const successMessage = document.getElementById('successMessage');
-        const successPhoto = document.getElementById('successPhoto');
         const startBtn = document.getElementById('startBtn');
         const startOverlay = document.getElementById('startOverlay');
-        const petalContainer = document.getElementById('petal-container');
+        const typewriterElement = document.getElementById('typewriter');
+        const bgMusic = document.getElementById('bgMusic');
+        const muteBtn = document.getElementById('muteBtn');
+        const audioIcon = document.getElementById('audioIcon');
+        const progressBar = document.getElementById('scroll-progress');
+        let charIndex = 0;
+        const textToType = "A Story Shared.";
 
-        // Logic for petals
+        // --- IMPROVED AUDIO: Fade In Logic ---
+        function fadeInAudio(audio, targetVolume, duration) {
+            audio.volume = 0;
+            const step = targetVolume / (duration / 50);
+            const fade = setInterval(() => {
+                if (audio.volume < targetVolume) {
+                    audio.volume = Math.min(targetVolume, audio.volume + step);
+                } else {
+                    clearInterval(fade);
+                }
+            }, 50);
+        }
+
+        muteBtn.addEventListener('click', () => {
+            if (bgMusic.muted) {
+                bgMusic.muted = false;
+                audioIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+            } else {
+                bgMusic.muted = true;
+                audioIcon.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+            }
+        });
+
+        // --- IMPROVED STORY FLOW: Scroll Progress ---
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
+
+        function typeWriter() {
+            if (charIndex < textToType.length) {
+                if (charIndex >= 8) {
+                    typewriterElement.innerHTML = `A Story <i>${textToType.substring(8, charIndex + 1)}</i>`;
+                } else {
+                    typewriterElement.innerHTML = textToType.substring(0, charIndex + 1);
+                }
+                charIndex++;
+                setTimeout(typeWriter, 120);
+            } else {
+                setTimeout(() => typewriterElement.style.borderRight = "none", 1500);
+            }
+        }
+
         function createPetal() {
             const petal = document.createElement('div');
             petal.classList.add('petal');
@@ -320,23 +382,41 @@
             petal.style.width = Math.random() * 15 + 10 + 'px';
             petal.style.height = petal.style.width;
             petal.style.animationDuration = Math.random() * 3 + 5 + 's';
-            petal.style.opacity = Math.random() * 0.5;
-            petalContainer.appendChild(petal);
+            document.getElementById('petal-container').appendChild(petal);
             setTimeout(() => petal.remove(), 8000);
         }
 
-        // Logic for start button (unlocks audio & starts petals)
+        // --- NEW: Heart Confetti Celebration ---
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-confetti');
+            heart.innerHTML = '♥';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.color = ['#f3c6d1', '#e1abb9', '#ff4d6d'][Math.floor(Math.random() * 3)];
+            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }
+
         startBtn.addEventListener('click', () => {
             startOverlay.style.opacity = '0';
-            setTimeout(() => startOverlay.style.display = 'none', 1000);
-            bgMusic.play().catch(err => console.log("Audio play blocked by browser"));
-            bgMusic.volume = 0.6;
-            setInterval(createPetal, 400); // Start the petal effect
+            setTimeout(() => { startOverlay.style.display = 'none'; typeWriter(); }, 1000);
+            bgMusic.play(); 
+            fadeInAudio(bgMusic, 0.4, 3000); // 3-second fade in
+            setInterval(createPetal, 400);
         });
 
-        muteBtn.addEventListener('click', () => {
-            bgMusic.muted = !bgMusic.muted;
-            muteBtn.style.opacity = bgMusic.muted ? "0.5" : "1";
+        // --- NEW: Subtle Parallax Effect ---
+        document.addEventListener('mousemove', (e) => {
+            const imgs = document.querySelectorAll('.parallax-img');
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            imgs.forEach(img => {
+                if (img.classList.contains('zoom')) {
+                    img.style.transform = `scale(1.1) translate(${x}px, ${y}px) rotateY(${x/2}deg)`;
+                }
+            });
         });
 
         const stageObserver = new IntersectionObserver((entries) => {
@@ -345,35 +425,68 @@
                     entry.target.querySelector('.stage-content').classList.add('visible');
                     const img = entry.target.querySelector('img');
                     if (img) img.classList.add('zoom');
+                    
+                    const focusImg = entry.target.querySelector('#focus-img');
+                    if (focusImg) focusImg.style.filter = 'blur(0px)';
+                    
+                    const bar = entry.target.querySelector('#compatibility-bar');
+                    const percentText = entry.target.querySelector('#percent-text');
+                    if (bar && percentText && bar.style.width !== '99.9%') {
+                        bar.style.width = '99.9%';
+                        let count = 0;
+                        const interval = setInterval(() => {
+                            if (count >= 99.9) {
+                                percentText.textContent = '99.9%';
+                                clearInterval(interval);
+                            } else {
+                                count += 1.1;
+                                percentText.textContent = Math.floor(count) + '%';
+                            }
+                        }, 30);
+                    }
                 }
             });
-        }, { threshold: 0.15 });
-
+        }, { threshold: 0.2 });
         document.querySelectorAll('.stage').forEach(s => stageObserver.observe(s));
 
-        yesBtn.addEventListener('click', () => {
-            offer.style.display = 'none';
-            successMessage.style.display = 'block';
-            setTimeout(() => successPhoto.classList.add('reveal'), 100);
-            bgMusic.volume = 0.8;
-            // Increase petals on success
-            setInterval(createPetal, 100);
+        // --- IMPROVED YES INTERACTION ---
+        document.getElementById('yesBtn').addEventListener('click', () => {
+            document.getElementById('offer').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            setTimeout(() => document.getElementById('successPhoto').classList.add('reveal'), 100);
+            
+            // Celebration!
+            const celebration = setInterval(createHeart, 100);
+            setTimeout(() => clearInterval(celebration), 5000); // Burst for 5 seconds
         });
 
+        // --- IMPROVED NO INTERACTION (Playful & Less Chaotic) ---
         const noBtn = document.getElementById('noBtn');
+        let noCount = 0;
+        const noTexts = ["Stay as Allies", "Are you sure?", "Think again!", "You clicked the wrong one?", "Maybe Yes?"];
+
         noBtn.addEventListener('mouseover', () => {
             if (window.innerWidth > 850) {
-                const x = Math.random() * (window.innerWidth - 150);
-                const y = Math.random() * (window.innerHeight - 50);
+                // Change text first
+                if (noCount < noTexts.length - 1) {
+                    noCount++;
+                    noBtn.innerText = noTexts[noCount];
+                }
+
+                // Move button gracefully
+                const btnWidth = noBtn.offsetWidth;
+                const btnHeight = noBtn.offsetHeight;
+                
+                // Keep it within visible bounds
+                const newX = Math.random() * (window.innerWidth - btnWidth - 40) + 20;
+                const newY = Math.random() * (window.innerHeight - btnHeight - 40) + 20;
+                
                 noBtn.style.position = 'fixed';
-                noBtn.style.left = x + 'px';
-                noBtn.style.top = y + 'px';
+                noBtn.style.left = `${newX}px`;
+                noBtn.style.top = `${newY}px`;
+                noBtn.style.zIndex = "1000";
             }
         });
     </script>
 </body>
 </html>
-
-
-
-
