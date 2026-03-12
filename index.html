@@ -85,7 +85,7 @@
         .cover {
             height: 100vh; width: 100%; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
-            position: sticky; top: 0; z-index: -1;
+            position: sticky; top: 0; z-index: 1;
             background: radial-gradient(circle at center, #4a0e1c 0%, var(--bg-deep) 100%);
             background-size: 200% 200%; animation: drift 15s infinite alternate ease-in-out;
         }
@@ -134,7 +134,7 @@ h1:hover, h2:hover {
         .cursor-blink { animation: blink 0.8s step-end infinite; }
         @keyframes blink { from, to { border-color: transparent } 50% { border-color: var(--accent-main); } }
 
-        .journey-wrapper { background-color: var(--bg-deep); position: relative; z-index: 1; padding-bottom: 25vh; }
+        .journey-wrapper { background-color: var(--bg-deep); position: relative; z-index: 2; padding-bottom: 25vh; }
 
         .stage { height: 120vh; width: 100%; display: flex; align-items: center; position: relative; margin-bottom: 10vh; }
         .stage.reverse { justify-content: flex-end; }
