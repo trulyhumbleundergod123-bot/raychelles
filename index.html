@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE NARRATIVE | A Confession</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,700&family=Work+Sans:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,700&family=Work+Sans:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-deep: #2c040d;
@@ -49,6 +49,20 @@
             font-size: 20px;
             user-select: none;
             animation: heartFall 3s linear forwards;
+        }
+
+        .ribbon-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #FF0000, #FF4500, #DC143C);
+            clip-path: polygon(0% 20%, 20% 10%, 40% 20%, 60% 10%, 80% 20%, 100% 10%, 100% 30%, 80% 40%, 60% 30%, 40% 40%, 20% 30%, 0% 40%);
+            z-index: 0;
+            transform: translateY(0);
+            opacity: 0.5;
+            pointer-events: none;
         }
 
         #startOverlay {
@@ -131,6 +145,129 @@ h1:hover, h2:hover {
     box-shadow: 0 0 20px var(--accent-main);
     transform: translateY(-2px);
 }
+
+.name-inputs {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.name-inputs label {
+    color: var(--text-main);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.name-inputs input {
+    padding: 10px;
+    border: 2px solid var(--accent-alt);
+    border-radius: 5px;
+    background: rgba(44, 4, 13, 0.8);
+    color: var(--text-main);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1rem;
+    width: 250px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.name-inputs input:focus {
+    outline: none;
+    border-color: var(--accent-main);
+    box-shadow: 0 0 10px var(--accent-main);
+}
+
+.certificate {
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--glass-base), rgba(243, 198, 209, 0.1));
+    border: 3px double var(--accent-main);
+    border-radius: 15px;
+    text-align: center;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 20px rgba(243, 198, 209, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.certificate::before {
+    content: 'R&R';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--accent-main);
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.certificate h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-main);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.certificate p {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    margin: 10px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.certificate .names {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--accent-main);
+    position: relative;
+    z-index: 1;
+}
+
+.certificate .date {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--accent-premium);
+    position: relative;
+    z-index: 1;
+}
+
+.certificate button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: rgba(243, 198, 209, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-main);
+    border: 1px solid rgba(243, 198, 209, 0.3);
+    border-radius: 8px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    z-index: 1;
+}
+
+.certificate button:hover {
+    background: rgba(243, 198, 209, 0.3);
+    box-shadow: 0 0 20px rgba(243, 198, 209, 0.6);
+    transform: translateY(-2px);
+}
+
         .cursor-blink { animation: blink 0.8s step-end infinite; }
         @keyframes blink { from, to { border-color: transparent } 50% { border-color: var(--accent-main); } }
 
@@ -190,7 +327,7 @@ h1:hover, h2:hover {
         .polaroid.active { transform: scale(1.6) rotate(0deg) !important; z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
 
         .progress-wrapper { margin-top: 30px; }
-        .progress-label { display: flex; justify-content: space-between; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-premium); margin-bottom: 8px; }
+        .sentiment-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-premium); opacity: 0.7; margin-bottom: 8px; }
         .bar-bg { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; }
         .bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-alt), var(--accent-main)); box-shadow: 0 0 10px var(--accent-main); transition: width 2.5s cubic-bezier(0.1, 0.5, 0.2, 1); }
 
@@ -222,11 +359,12 @@ h1:hover, h2:hover {
         @media (max-width: 850px) {
             .stage { height: auto; flex-direction: column; margin-bottom: 80px; }
             .stage-image { position: relative; width: 100%; height: 300px; border-radius: 12px; }
-            .stage-content { width: 90%; margin: -50px auto 0; padding: 30px 20px; opacity: 1; transform: none; left: auto !important; right: auto !important; }
+            .stage-content { width: 90%; margin: -50px auto 0; padding: 30px 20px; left: auto !important; right: auto !important; }
             .btn-group { flex-direction: column; height: auto; align-items: center; width: 100%; }
             #noBtn { position: static !important; } /* Disable moving on mobile for better UX */
         }
     </style>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -244,6 +382,8 @@ h1:hover, h2:hover {
         <h1 id="typewriter" class="cursor-blink"></h1>
         <p style="margin-top: 20px; font-style: italic; opacity: 0.6;">Scroll to Begin</p>
     </header>
+
+    <div class="ribbon-bg"></div>
 
     <div class="journey-wrapper">
         <div class="stage normal">
@@ -268,9 +408,9 @@ h1:hover, h2:hover {
                 <h2>The Little Things</h2>
                 <p>Beyond the milestones, it's these snapshots I replay the most. (Tap to zoom)</p>
                 <div class="polaroid-container">
-                    <div class="polaroid" onclick="this.classList.toggle('active')"><img src="unnamed (1).jpg"><span>First laugh.</span></div>
-                    <div class="polaroid" onclick="this.classList.toggle('active')"><img src="unnamed (1).jpg"><span>Coffee run.</span></div>
-                    <div class="polaroid" onclick="this.classList.toggle('active')"><img src="unnamed (1).jpg"><span>Just us.</span></div>
+                    <div class="polaroid"><img src="unnamed (1).jpg"><span>First laugh.</span></div>
+                    <div class="polaroid"><img src="unnamed (1).jpg"><span>Coffee run.</span></div>
+                    <div class="polaroid"><img src="unnamed (1).jpg"><span>Just us.</span></div>
                 </div>
             </div>
         </div>
@@ -282,8 +422,7 @@ h1:hover, h2:hover {
                 <h2>Nourishing the Connection</h2>
                 <p>Over shared projects and discussions, a strong foundation formed. I felt something deeper developing.</p>
                 <div class="progress-wrapper">
-                    <div class="progress-label"><span>Compatibility: Calculating...</span><span id="percent-text">0%</span></div>
-                    <div class="bar-bg"><div class="bar-fill" id="compatibility-bar"></div></div>
+                    <div class="sentiment-label">SENTIMENT: UNSTABLE &amp; GROWING...</div>
                 </div>
             </div>
         </div>
@@ -307,6 +446,12 @@ h1:hover, h2:hover {
         <div id="offer">
             <h2 style="font-family: 'Playfair Display', serif; font-size: 3rem;">The Next Chapter.</h2>
             <p style="max-width: 500px; margin: 0 auto;">Will you accept this proposal to explore a romantic relationship?</p>
+            <div class="name-inputs">
+                <label for="partnerName">Partner's Name:</label>
+                <input type="text" id="partnerName" placeholder="Enter partner's name">
+                <label for="meetingDate">Our First Meeting Date:</label>
+                <input type="date" id="meetingDate">
+            </div>
             <div class="btn-group">
                 <button id="yesBtn">Accept Proposal</button>
                 <button id="noBtn">Stay as Allies</button>
@@ -316,6 +461,15 @@ h1:hover, h2:hover {
             <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">It's a wonderful decision.</h2>
             <div class="success-photo-wrapper" id="successPhoto"><img src="unnamed (1).jpg" style="width:100%"></div>
             <div class="heart">♥</div>
+            <div id="certificate" class="certificate">
+                <h3>Relationship Certificate</h3>
+                <p>This certifies that</p>
+                <p class="names"><span id="certYourName">Your Name</span> & <span id="certPartnerName">Partner's Name</span></p>
+                <p>have officially entered into a romantic relationship on</p>
+                <p class="date" id="certDate">Date</p>
+                <p>May your love story be filled with joy, adventure, and endless happiness.</p>
+                <button id="downloadBtn">Download Certificate</button>
+            </div>
         </div>
     </section>
 
@@ -353,12 +507,16 @@ h1:hover, h2:hover {
             }
         });
 
-        // --- IMPROVED STORY FLOW: Scroll Progress ---
+        // --- IMPROVED STORY FLOW: Scroll Progress + Ribbon Parallax ---
+        const ribbonBg = document.querySelector('.ribbon-bg');
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
             progressBar.style.width = scrolled + "%";
+
+            // Move ribbon for parallax effect
+            ribbonBg.style.transform = `translateY(${winScroll * 0.5}px)`;
         });
 
         function typeWriter() {
@@ -421,29 +579,34 @@ h1:hover, h2:hover {
 
         const stageObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
+                const content = entry.target.querySelector('.stage-content');
+                const img = entry.target.querySelector('img');
+                const focusImg = entry.target.querySelector('#focus-img');
+
                 if (entry.isIntersecting) {
-                    entry.target.querySelector('.stage-content').classList.add('visible');
-                    const img = entry.target.querySelector('img');
+                    content?.classList.add('visible');
                     if (img) img.classList.add('zoom');
-                    
-                    const focusImg = entry.target.querySelector('#focus-img');
                     if (focusImg) focusImg.style.filter = 'blur(0px)';
-                    
-                    const bar = entry.target.querySelector('#compatibility-bar');
-                    const percentText = entry.target.querySelector('#percent-text');
-                    if (bar && percentText && bar.style.width !== '99.9%') {
-                        bar.style.width = '99.9%';
-                        let count = 0;
-                        const interval = setInterval(() => {
-                            if (count >= 99.9) {
-                                percentText.textContent = '99.9%';
-                                clearInterval(interval);
-                            } else {
-                                count += 1.1;
-                                percentText.textContent = Math.floor(count) + '%';
-                            }
-                        }, 30);
-                    }
+                } else {
+                    content?.classList.remove('visible');
+                    if (img) img.classList.remove('zoom');
+                    if (focusImg) focusImg.style.filter = 'blur(15px)';
+                }
+
+                const bar = entry.target.querySelector('#compatibility-bar');
+                const percentText = entry.target.querySelector('#percent-text');
+                if (entry.isIntersecting && bar && percentText && bar.style.width !== '99.9%') {
+                    bar.style.width = '99.9%';
+                    let count = 0;
+                    const interval = setInterval(() => {
+                        if (count >= 99.9) {
+                            percentText.textContent = '99.9%';
+                            clearInterval(interval);
+                        } else {
+                            count += 1.1;
+                            percentText.textContent = Math.floor(count) + '%';
+                        }
+                    }, 30);
                 }
             });
         }, { threshold: 0.2 });
@@ -451,6 +614,24 @@ h1:hover, h2:hover {
 
         // --- IMPROVED YES INTERACTION ---
         document.getElementById('yesBtn').addEventListener('click', () => {
+            // Get input values
+            const yourName = 'Raymond';
+            const partnerName = document.getElementById('partnerName').value.trim() || 'Partner\'s Name';
+            const meetingDate = document.getElementById('meetingDate').value;
+            
+            // Populate certificate
+            document.getElementById('certYourName').textContent = yourName;
+            document.getElementById('certPartnerName').textContent = partnerName;
+            document.getElementById('certDate').textContent = meetingDate ? new Date(meetingDate).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            }) : new Date().toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
             document.getElementById('offer').style.display = 'none';
             document.getElementById('successMessage').style.display = 'block';
             setTimeout(() => document.getElementById('successPhoto').classList.add('reveal'), 100);
@@ -458,6 +639,25 @@ h1:hover, h2:hover {
             // Celebration!
             const celebration = setInterval(createHeart, 100);
             setTimeout(() => clearInterval(celebration), 5000); // Burst for 5 seconds
+        });
+
+        // --- DOWNLOAD CERTIFICATE ---
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const certificate = document.getElementById('certificate');
+            
+            html2canvas(certificate, {
+                backgroundColor: '#2c040d',
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'relationship-certificate.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            }).catch(err => {
+                console.error('Error generating certificate:', err);
+                alert('Sorry, there was an error generating your certificate. Please try again.');
+            });
         });
 
         // --- IMPROVED NO INTERACTION (Playful & Less Chaotic) ---
@@ -486,6 +686,16 @@ h1:hover, h2:hover {
                 noBtn.style.top = `${newY}px`;
                 noBtn.style.zIndex = "1000";
             }
+        });
+
+        // --- POLAROID CLICK: only one active at a time ---
+        const polaroids = document.querySelectorAll('.polaroid');
+        polaroids.forEach(p => {
+            p.addEventListener('click', () => {
+                const isActive = p.classList.contains('active');
+                polaroids.forEach(x => x.classList.remove('active'));
+                if (!isActive) p.classList.add('active');
+            });
         });
     </script>
 </body>
