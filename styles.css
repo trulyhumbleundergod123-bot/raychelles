@@ -187,6 +187,16 @@ h1:hover, h2:hover {
     box-shadow: 0 0 20px rgba(243, 198, 209, 0.3);
     position: relative;
     overflow: hidden;
+    animation: breathing 2.5s infinite ease-in-out;
+}
+
+@keyframes breathing {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 .certificate::before {
@@ -240,6 +250,37 @@ h1:hover, h2:hover {
     text-shadow: 0 0 10px rgba(255, 220, 180, 0.7);
     position: relative;
     z-index: 1;
+}
+
+.signatures {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px 0;
+}
+
+.signature-line {
+    width: 40%;
+    text-align: center;
+}
+
+.signature-line span {
+    font-family: 'Allura', cursive;
+    font-size: 2.5rem; /* Increased size for better visibility */
+    opacity: 0.9;
+}
+
+.signature-line hr {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: -5px 0 5px;
+}
+
+.signature-line span:last-child {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.6;
 }
 
 .certificate button {
@@ -435,44 +476,79 @@ h1:hover, h2:hover {
         .polaroid span { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.65rem; color: #333; text-align: center; margin-top: 8px; }
         .polaroid.active { transform: scale(1.6) rotate(0deg) !important; z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
 
-        .sentiment-card {
+        /* --- Memory Sparks Interactive Canvas --- */
+        #memory-spark-container {
+            position: relative;
             margin-top: 30px;
-            padding: 18px 22px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(243, 198, 209, 0.3);
-            border-radius: 14px;
-            box-shadow: 0 0 15px rgba(255, 100, 100, 0.1);
-            cursor: pointer;
-            transition: filter 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .sentiment-card:hover, .sentiment-card:active, .sentiment-card.synced {
-            filter: brightness(1.05) saturate(1.2) drop-shadow(0 0 18px rgba(255, 90, 90, 0.35));
+            height: 250px; /* Adjust height as needed */
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: none; /* Hide cursor for a more immersive feel */
+            overflow: hidden;
         }
 
-        .sentiment-text {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1.4px;
-            color: var(--accent-premium);
-            opacity: 0.85;
-            font-weight: 600;
+        #spark-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
-        .pulse-line {
-            width: 60px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 1px;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
+        #memory-text-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: white;
+            opacity: 0;
+            pointer-events: none; /* Cant click the text */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            transition: opacity 0.5s ease-in-out;
         }
 
-        .sentiment-card.synced .pulse-line {
-            background: rgba(255, 60, 60, 1);
-            box-shadow: 0 0 12px rgba(255, 40, 40, 0.8);
+        #memory-text-display.visible {
+            opacity: 1;
+        }
+
+        /* NEW: Animation for the memory text reveal */
+        #memory-text-display.burst {
+            /* Make text stay visible for longer */
+            animation: spark-burst 2.5s ease-in-out forwards;
+        }
+
+        @keyframes spark-burst {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        .spark-instruction {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+            pointer-events: none;
         }
 
         .confession-section {
@@ -482,6 +558,80 @@ h1:hover, h2:hover {
         }
         .btn-group { margin-top: 60px; display: flex; gap: 25px; min-height: 60px; position: relative; }
         button { padding: 15px 45px; border-radius: 4px; border: none; cursor: pointer; letter-spacing: 2px; transition: 0.4s; }
+        .no-btn-wrapper {
+            position: relative;
+            display: inline-block; /* Or block, depending on layout */
+        }
+
+        #noBtn:hover + .tooltip, .no-btn-wrapper:hover .tooltip {
+            display: block;
+            opacity: 1;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            bottom: 100%; /* Position above the button */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            margin-bottom: 5px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake-animation {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        .no-btn-wrapper {
+            position: relative;
+            display: inline-block; /* Or block, depending on layout */
+        }
+
+        #noBtn:hover + .tooltip, .no-btn-wrapper:hover .tooltip {
+            display: block;
+            opacity: 1;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            bottom: 100%; /* Position above the button */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            margin-bottom: 5px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake-animation {
+            animation: shake 0.3s ease-in-out;
+        }
+
         #yesBtn { background-color: var(--accent-main); color: var(--bg-deep); font-weight: 600; animation: pulseGlow 2s infinite; }
         #noBtn { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.15); transition: 0.2s; }
 
