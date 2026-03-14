@@ -84,10 +84,14 @@ function createPetal() {
 }
 
 // Updated Mouse Interaction
+// --- CONSOLIDATED MOUSE MOVEMENT ---
 document.addEventListener('mousemove', (e) => {
     const mouseX = e.clientX;
     const mouseY = e.clientY;
+    const x = (window.innerWidth / 2 - e.pageX) / 50;
+    const y = (window.innerHeight / 2 - e.pageY) / 50;
 
+    // Petal interaction
     activePetals.forEach(petal => {
         const rect = petal.getBoundingClientRect();
         const petalX = rect.left + rect.width / 2;
@@ -97,36 +101,26 @@ document.addEventListener('mousemove', (e) => {
         const dy = mouseY - petalY;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // If mouse is close (within 150px), push the petal away
         if (distance < 150) {
             const pushFactor = (150 - distance) / 10;
-            const moveX = (dx / distance) * -pushFactor * 5; 
+            const moveX = (dx / distance) * -pushFactor * 5;
             const moveY = (dy / distance) * -pushFactor * 5;
-            
             petal.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${distance}deg)`;
             petal.style.opacity = "0.8";
         } else {
-            petal.style.transform = `translate(0, 0)`;
+            petal.style.transform = 'translate(0, 0)';
             petal.style.opacity = "0.3";
         }
     });
 
-    // Keep your existing parallax-img logic here too!
+    // Parallax image effect
     const imgs = document.querySelectorAll('.parallax-img');
-    const x = (window.innerWidth / 2 - e.pageX) / 50;
-    const y = (window.innerHeight / 2 - e.pageY) / 50;
     imgs.forEach(img => {
         if (img.classList.contains('zoom')) {
-            img.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+            img.style.transform = `scale(1.1) translate(${x}px, ${y}px) rotateY(${x/2}deg)`;
         }
     });
 });
-// Initialize on start
-startBtn.addEventListener('click', () => {
-    // ... your other start logic ...
-    createConstellation();
-});
-
         // --- NEW: Heart Confetti Celebration ---
         function createHeart() {
             const heart = document.createElement('div');
@@ -139,25 +133,16 @@ startBtn.addEventListener('click', () => {
             setTimeout(() => heart.remove(), 3000);
         }
 
+        // --- CONSOLIDATED START EXPERIENCE ---
         startBtn.addEventListener('click', () => {
+            if (typeof createConstellation === 'function') {
+                createConstellation();
+            }
             startOverlay.style.opacity = '0';
             setTimeout(() => { startOverlay.style.display = 'none'; typeWriter(); }, 1000);
             bgMusic.play();
             fadeInAudio(bgMusic, 0.4, 3000); // 3-second fade in
             setInterval(createPetal, 400);
-        });
-
-        // --- NEW: Subtle Parallax Effect ---
-        document.addEventListener('mousemove', (e) => {
-            const imgs = document.querySelectorAll('.parallax-img');
-            const x = (window.innerWidth / 2 - e.pageX) / 50;
-            const y = (window.innerHeight / 2 - e.pageY) / 50;
-
-            imgs.forEach(img => {
-                if (img.classList.contains('zoom')) {
-                    img.style.transform = `scale(1.1) translate(${x}px, ${y}px) rotateY(${x/2}deg)`;
-                }
-            });
         });
 
         const stageObserver = new IntersectionObserver((entries) => {
@@ -205,6 +190,8 @@ startBtn.addEventListener('click', () => {
             // Populate certificate
             document.getElementById('certYourName').textContent = yourName;
             document.getElementById('certPartnerName').textContent = partnerName;
+            document.getElementById('sigYourName').textContent = yourName;
+            document.getElementById('sigPartnerName').textContent = partnerName;
             document.getElementById('certDate').textContent = meetingDate ? new Date(meetingDate).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -350,4 +337,160 @@ startBtn.addEventListener('click', () => {
         if (sentimentCard) {
             sentimentCard.addEventListener('pointerdown', syncSentiment);
             sentimentCard.addEventListener('click', syncSentiment);
+        }
+
+        // --- INTERACTIVE MEMORY SPARKS --- 
+        const canvas = document.getElementById('spark-canvas');
+        const memoryTextDisplay = document.getElementById('memory-text-display');
+        const sparkContainer = document.getElementById('memory-spark-container');
+
+        if (sparkContainer && canvas && memoryTextDisplay) { // Check if elements exist
+            const ctx = canvas.getContext('2d');
+            let sparks = [];
+            let mouse = { x: undefined, y: undefined };
+
+            // --- ENHANCEMENT: Spark Color Palette ---
+            const sparkColors = [
+                'rgba(255, 223, 186, 0.9)', // Soft Gold
+                'rgba(243, 198, 209, 0.9)', // Soft Pink
+                'rgba(255, 255, 255, 0.8)', // White
+                'rgba(225, 218, 255, 0.9)'  // Soft Lavender
+            ];
+
+            const memories = [
+                "...a shared laugh.",
+                "...a late-night talk.",
+                "...an inside joke.",
+                "...the way you smile.",
+                "...a comfortable silence.",
+                "...that one song.",
+                "...a knowing glance.",
+                "...our first real conversation."
+            ];
+
+            function resizeCanvas() {
+                canvas.width = sparkContainer.clientWidth;
+                canvas.height = sparkContainer.clientHeight;
+            }
+
+            class Spark {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = Math.random() * 7 + 3;
+                    this.life = 1;
+                    // Make sparks slower and less aggressive
+                    this.vx = (Math.random() - 0.5) * 1.5;
+                    this.vy = (Math.random() - 0.5) * 1.5;
+                    this.color = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+                    // FIX: Correctly get the base color for alpha animation
+                    this.baseColor = this.color.substring(0, this.color.lastIndexOf(',') + 1);
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    // Make sparks fade slower
+                    this.life -= 0.01;
+                    this.size *= 0.98;
+                    // FIX: Apply the decreasing alpha to the base color
+                    this.color = `${this.baseColor} ${Math.max(0, this.life)})`;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // --- ENHANCEMENT: Draw custom cursor orb ---
+                if (mouse.x !== undefined) {
+                    const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 5, mouse.x, mouse.y, 25);
+                    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                    
+                    ctx.beginPath();
+                    ctx.arc(mouse.x, mouse.y, 25, 0, Math.PI * 2);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(mouse.x, mouse.y, 15, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                for (let i = sparks.length - 1; i >= 0; i--) {
+                    const s = sparks[i];
+                    s.update();
+                    s.draw();
+                    if (s.life <= 0) {
+                        sparks.splice(i, 1);
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            function handleMouseMove(e) {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+
+                // Reduce the number of sparks generated and add a cap
+                if (sparks.length < 100) {
+                    sparks.push(new Spark(mouse.x, mouse.y));
+                }
+            }
+
+            function handleMouseClick(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                let clickedOnSpark = false;
+                for (let i = sparks.length - 1; i >= 0; i--) {
+                    const s = sparks[i];
+                    const distance = Math.sqrt(Math.pow(clickX - s.x, 2) + Math.pow(clickY - s.y, 2));
+                    if (distance < s.size + 10) {
+                        clickedOnSpark = true;
+                        sparks.splice(i, 1);
+                    }
+                }
+
+                if (clickedOnSpark) {
+                    const randomMemory = memories[Math.floor(Math.random() * memories.length)];
+                    memoryTextDisplay.textContent = randomMemory;
+                    
+                    // --- ENHANCEMENT: Trigger burst animation ---
+                    memoryTextDisplay.classList.remove('burst'); // Reset animation
+                    void memoryTextDisplay.offsetWidth; // Trigger reflow
+                    memoryTextDisplay.classList.add('burst');
+
+                    // The animation now handles the fade-out
+                }
+            }
+
+            const sparkObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        resizeCanvas();
+                        sparkContainer.addEventListener('mousemove', handleMouseMove);
+                        sparkContainer.addEventListener('click', handleMouseClick);
+                        if (sparks.length === 0) {
+                            animate();
+                        }
+                    } else {
+                        sparkContainer.removeEventListener('mousemove', handleMouseMove);
+                        sparkContainer.removeEventListener('click', handleMouseClick);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sparkObserver.observe(sparkContainer);
         }
