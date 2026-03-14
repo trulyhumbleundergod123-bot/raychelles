@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE NARRATIVE | A Confession</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,700&family=Work+Sans:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,700&family=Work+Sans:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
@@ -64,9 +64,10 @@
                 <h2>Nourishing the Connection</h2>
                 <p>As we collaborated on shared projects and dived into long discussions, a strong foundation began to form between us. 
                     Working side-by-side allowed me to see the smaller details of your character, and those quiet moments of synchronization turned into something much more meaningful. With every hurdle we crossed and every idea we exchanged, I felt a deeper, more certain connection developing that I hadn't expected.</p>
-                <div class="sentiment-card" id="sentimentCard">
-                    <div class="sentiment-text" id="sentimentText">SENTIMENT: UNSTABLE &amp; GROWING...</div>
-                    <div class="pulse-line" id="pulseLine"></div>
+                <div id="memory-spark-container">
+                    <canvas id="spark-canvas"></canvas>
+                    <div id="memory-text-display"></div>
+                    <p class="spark-instruction">Move your mouse to create sparks. Click one to reveal a memory.</p>
                 </div>
             </div>
         </div>
@@ -98,7 +99,9 @@
             </div>
             <div class="btn-group">
                 <button id="yesBtn">Accept Proposal</button>
-                <button id="noBtn">Stay as Allies</button>
+                <div class="no-btn-wrapper">
+                    <button id="noBtn">Stay as Allies</button>
+                </div>
             </div>
         </div>
         <div id="successMessage">
@@ -112,6 +115,20 @@
                 <p>have officially entered into a romantic relationship on</p>
                 <p class="date" id="certDate">Date</p>
                 <p>May your love story be filled with joy, adventure, and endless happiness.</p>
+
+                <div class="signatures">
+                    <div class="signature-line">
+                        <span id="sigYourName">Your Name</span>
+                        <hr>
+                        <span>Signature</span>
+                    </div>
+                    <div class="signature-line">
+                        <span id="sigPartnerName">Partner's Name</span>
+                        <hr>
+                        <span>Signature</span>
+                    </div>
+                </div>
+
                 <button id="downloadBtn">Download Certificate</button>
             </div>
         </div>
